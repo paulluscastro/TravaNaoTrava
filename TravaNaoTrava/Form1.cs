@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,25 @@ namespace TravaNaoTrava
         private void button2_Click(object sender, EventArgs e)
         {
             Task task = Task.Factory.StartNew(Loop10);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            PrintDialog dlg = new PrintDialog();
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                PrintDocument pd = new PrintDocument();
+                pd.PrinterSettings = dlg.PrinterSettings;
+                pd.PrintPage += PrintPage;
+                pd.Print();
+            }
+        }
+
+        private void PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Bitmap bitmap = new Bitmap(DisplayRectangle.Width, DisplayRectangle.Height);
+            DrawToBitmap(bitmap, DisplayRectangle);
+            e.Graphics.DrawImage(bitmap, new Point() { X = 10, Y = 10 });
         }
     }
 }
